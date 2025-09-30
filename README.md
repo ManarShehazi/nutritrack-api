@@ -107,7 +107,7 @@ src/
 
 NutriTrack uses a normalized MySQL schema with the following core tables:
 
--** Users**
+- **Users**
 userId, name, bmi, dietaryRestrictions, caloricGoal
 
 - **Meals**
@@ -130,4 +130,120 @@ mealId, ingredientId, quantity
  ```bash
 src/db.sql
 ```
+
+## API Endpoints
+
+All endpoints follow standard REST conventions and return JSON.
+
+ **Users**
+| Method | Endpoint         | Description       |
+| ------ | ---------------- | ----------------- |
+| POST   | `/users`         | Create a new user |
+| GET    | `/users`         | Get all users     |
+| GET    | `/users/:userId` | Get user by ID    |
+| PUT    | `/users/:userId` | Update a user     |
+| DELETE | `/users/:userId` | Delete a user     |
+
+**Meals**
+| Method | Endpoint         | Description      |
+| ------ | ---------------- | ---------------- |
+| POST   | `/meals`         | Add a new meal   |
+| GET    | `/meals`         | Get all meals    |
+| GET    | `/meals/:mealId` | Get a meal by ID |
+| PUT    | `/meals/:mealId` | Update a meal    |
+| DELETE | `/meals/:mealId` | Delete a meal    |
+
+**Ingredients**
+| Method | Endpoint           | Description          |
+| ------ | ------------------ | -------------------- |
+| POST   | `/ingredients`     | Add a new ingredient |
+| GET    | `/ingredients`     | Get all ingredients  |
+| GET    | `/ingredients/:id` | Get ingredient by ID |
+| PUT    | `/ingredients/:id` | Update ingredient    |
+| DELETE | `/ingredients/:id` | Delete ingredient    |
+
+**Food Logs**
+| Method | Endpoint                 | Description             |
+| ------ | ------------------------ | ----------------------- |
+| POST   | `/foodlogs`              | Create a new food log   |
+| GET    | `/foodlogs/user/:userId` | Get all logs for a user |
+| PUT    | `/foodlogs/:logId`       | Update a food log       |
+| DELETE | `/foodlogs/:logId`       | Delete a food log       |
+
+**Shopping Lists**
+| Method | Endpoint                      | Description              |
+| ------ | ----------------------------- | ------------------------ |
+| POST   | `/shoppinglists/:mealPlanId`  | Generate a shopping list |
+| GET    | `/shoppinglists/user/:userId` | Get all lists for a user |
+| PUT    | `/shoppinglists/:listId`      | Update a shopping list   |
+| DELETE | `/shoppinglists/:listId`      | Delete a shopping list   |
+
+### Example Request
+
+Create a new user
+
+POST /users
+```json
+{
+  "name": "John Doe",
+  "bmi": 22.5,
+  "dietaryRestrictions": ["VEGAN"],
+  "caloricGoal": 2000
+}
+
+```
+## Running the Application
+Start with hot-reload (development)
+```bash
+npm run dev
+```
+
+Start in production mode
+```bash
+npm start
+```
+
+View Swagger (OpenAPI) docs
+
+Once running, visit:
+```bash
+http://localhost:8080/docs
+```
+
+### Testing
+
+Run unit and integration tests:
+```bash
+npm test
+```
+Generate coverage report:
+```bash
+npm run coverage
+```
+View the coverage report:
+```bash
+open coverage/index.html
+```
+
+## CI/CD Pipeline
+
+This project includes a GitLab CI pipeline with the following stages:
+
+- **Build**: Install dependencies
+
+- **DB Setup**: Initialize MySQL schema
+
+- **Test**: Run tests using Mocha
+
+- **Coverage**: Generate code coverage reports via c8
+
+## Contact Information
+
+Authors:
+
+**Haleema Khan**
+
+**Manar Shehazi**
+
+**Olesia Schukina**
 
