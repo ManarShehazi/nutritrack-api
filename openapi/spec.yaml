@@ -1,0 +1,1213 @@
+openapi: 3.0.0
+info:
+  title: NutriTrack API
+  description: "API for NutriTrack, an application to manage dietary needs with meal\
+    \ planning, nutrition tracking, and shopping list generation."
+  contact:
+    name: "Haleema, Manar, Olesia"
+    email: hsadia538@gmail.com
+  version: 1.0.0
+  x-authors:
+  - name: Haleema Khan
+    email: hsadia538@gmail.com
+  - name: Manar Shehazi
+    email: authortwo@example.com
+  - name: Olesia Shchukina
+    email: ""
+servers:
+- url: /
+security:
+- basicAuth: []
+tags:
+- name: User
+  description: Operations related to user profiles and preferences.
+- name: MealPlan
+  description: Operations related to meal planning and customization.
+- name: FoodLog
+  description: Operations related to logging daily food intake and tracking nutrition.
+- name: ShoppingList
+  description: Operations related to generating and customizing shopping lists.
+paths:
+  /users:
+    get:
+      tags:
+      - User
+      summary: Retrieve all users
+      operationId: usersGet
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        "500":
+          description: Internal Server Error - Unable to retrieve users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: User
+    post:
+      tags:
+      - User
+      summary: Create a user profile
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "201":
+          description: User profile created successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to create user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: User
+  /users/{userId}:
+    get:
+      tags:
+      - User
+      summary: Get user profile by ID
+      operationId: usersGetById
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: User profile data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: Not Found - User ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to retrieve user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: User
+    put:
+      tags:
+      - User
+      summary: Update user profile
+      operationId: usersPut
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: User profile updated successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - User ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to update user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: User
+    delete:
+      tags:
+      - User
+      summary: Delete a user profile
+      operationId: usersDelete
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: User profile deleted successfully
+        "404":
+          description: Not Found - User ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to delete user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: User
+  /mealplans:
+    post:
+      tags:
+      - MealPlan
+      summary: Generate a meal plan for user ID
+      operationId: mealplansPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          text/plain:
+            schema:
+              type: integer
+        required: true
+      responses:
+        "201":
+          description: Meal plan generated successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to generate meal plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: MealPlan
+  /mealplans/{mealPlanId}:
+    get:
+      tags:
+      - MealPlan
+      summary: Get meal plan by ID
+      operationId: mealplansGetById
+      parameters:
+      - name: mealPlanId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Meal plan details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+        "404":
+          description: Not Found - Meal Plan ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to retrieve meal plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: MealPlan
+    put:
+      tags:
+      - MealPlan
+      summary: Customize or regenerate a meal plan
+      operationId: mealplansPut
+      parameters:
+      - name: mealPlanId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+        required: true
+      responses:
+        "200":
+          description: Meal plan customized or regenerated successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - Meal Plan ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to update meal plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: MealPlan
+    delete:
+      tags:
+      - MealPlan
+      summary: Delete a meal plan
+      operationId: mealplansDelete
+      parameters:
+      - name: mealPlanId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Meal plan deleted successfully
+        "404":
+          description: Not Found - Meal plan ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to delete Meal plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: MealPlan
+  /mealplans/user/{userId}:
+    get:
+      tags:
+      - MealPlan
+      summary: Get meal plans by user ID
+      operationId: mealplansGetByUserId
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of meal plans for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MealPlan'
+        "404":
+          description: Not Found - User ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to retrieve meal plans
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: MealPlan
+  /foodlogs:
+    post:
+      tags:
+      - FoodLog
+      summary: Log a meal for a specific day
+      operationId: createFoodLog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoodLog'
+        required: true
+      responses:
+        "201":
+          description: Food log created successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to create food log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: FoodLog
+  /foodlogs/user/{userId}:
+      get:
+        tags:
+        - FoodLog
+        summary: Get food logs by user ID
+        operationId: foodlogsGetByUserId
+        parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        responses:
+          "200":
+            description: List of food logs for the user
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/FoodLog'
+          "404":
+            description: Not Found - User ID does not exist
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          "500":
+            description: Internal Server Error - Unable to retrieve food logs
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+        x-swagger-router-controller: FoodLog
+  /foodlogs/{foodlogId}:
+    put:
+      tags:
+      - FoodLog
+      summary: Update a food log
+      operationId: updateFoodLog
+      parameters:
+      - name: foodlogId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoodLog'
+        required: true
+      responses:
+        "200":
+          description: Food log updated successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - FoodLog ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to update food log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: FoodLog
+    delete:
+      tags:
+        - FoodLog
+      summary: Delete the log a meal for a specific day
+      operationId: deleteFoodLog
+      parameters:
+        - name: foodlogId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: FoodLog deleted successfully
+        "404":
+          description: Not Found - FoodLog ID does not exist
+        "500":
+          description: Internal Server Error - Unable to delete FoodLog
+      x-swagger-router-controller: FoodLog
+  /shoppinglists/user/{userId}:
+    get:
+      tags:
+      - ShoppingList
+      summary: Get a the ShoppingLists of a user
+      operationId: shoppinglistsGetByUserId
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of shopping lists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingList'
+        "404":
+          description: Not Found - User ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to retrieve shopping lists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: ShoppingList
+  /shoppinglists/new/{mealPlanId}:
+    post:
+      tags:
+      - ShoppingList
+      summary: Generate a shopping list based on a meal plan
+      operationId: shoppinglistsPost
+      parameters:
+      - name: mealPlanId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingList'
+        required: true
+      responses:
+        "201":
+          description: Shopping list generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  listId:
+                    type: integer
+                  type:
+                    type: string
+                  mealPlanId:
+                    type: integer
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to generate shopping list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: ShoppingList
+  /shoppinglists/delete/{listId}:
+    delete:
+      tags:
+      - ShoppingList
+      summary: Delete a shopping list
+      operationId: shoppinglistsDelete
+      parameters:
+      - name: listId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Shopping list deleted successfully
+        "404":
+          description: Not Found - Shopping List ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to delete shopping list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: ShoppingList
+  /shoppinglists/{listId}:
+    put:
+      tags:
+      - ShoppingList
+      summary: Update a shopping list
+      operationId: shoppinglistsPut
+      parameters:
+      - name: listId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingList'
+        required: true
+      responses:
+        "200":
+          description: Shopping list updated successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - Shopping List ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to update shopping list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: ShoppingList
+  /meals:
+    get:
+      tags:
+      - Meal
+      summary: Retrieve all meals
+      description: "Get a list of all meals, accessible to both users and admin."
+      operationId: getAllMeals
+      responses:
+        "200":
+          description: List of meals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meal'
+                x-content-type: application/json
+        "500":
+          description: Internal Server Error - Unable to retrieve meals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Meal
+    post:
+      tags:
+      - Meal
+      summary: Create a new meal
+      description: "Create a new meal, accessible only to admin users."
+      operationId: createMeal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Meal'
+        required: true
+      responses:
+        "201":
+          description: Meal created successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - Only admin users can create meals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to create meal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Meal
+  /meals/{mealId}:
+    get:
+      tags:
+      - Meal
+      summary: Get meal by ID
+      operationId: getMealById
+      parameters:
+      - name: mealId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Meal details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+        "404":
+          description: Not Found - Meal ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to retrieve meal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Meal
+    put:
+      tags:
+        - Meal
+      summary: Update a meal
+      description: "Update an existing meal, accessible only to admin users."
+      operationId: updateMeal
+      parameters:
+      - name: mealId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the meal
+                instructions:
+                  type: string
+                  description: Preparation instructions for the meal
+                ingredients:
+                  type: array
+                  description: A list of ingredients with their quantities
+                  items:
+                    type: object
+                    properties:
+                      ingredientId:
+                        type: integer
+                        description: The ID of the ingredient
+                      name:
+                        type: string
+                        description: The name of the ingredient
+                      quantity:
+                        type: number
+                        description: The quantity of the ingredient
+              required:
+              - name
+              - instructions
+              - ingredients
+      responses:
+        "200":
+          description: Meal updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meal'
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - Only admin users can update meals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - Meal ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to update meal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Meal
+    delete:
+      tags:
+      - Meal
+      summary: Delete a meal
+      description: "Delete an existing meal, accessible only to admin users."
+      operationId: deleteMeal
+      parameters:
+      - name: mealId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Meal deleted successfully
+        "403":
+          description: Forbidden - Only admin users can delete meals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - Meal ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to delete meal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Meal
+  /ingredients:
+    get:
+      tags:
+      - Ingredient
+      summary: Retrieve all ingredients
+      description: "Get a list of all ingredients, accessible to both users and admin."
+      operationId: getAllIngredients
+      responses:
+        "200":
+          description: List of ingredients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+                x-content-type: application/json
+        "500":
+          description: Internal Server Error - Unable to retrieve ingredients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Ingredient
+    post:
+      tags:
+      - Ingredient
+      summary: Create a new ingredient
+      description: "Create a new ingredient, accessible only to admin users."
+      operationId: createIngredient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+        required: true
+      responses:
+        "201":
+          description: Ingredient created successfully
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - Only admin users can create ingredients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to create ingredient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Ingredient
+  /ingredients/{ingredientId}:
+    get:
+      tags:
+      - Ingredient
+      summary: Get ingredient by ID
+      operationId: getIngredientById
+      parameters:
+      - name: ingredientId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Ingredient details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        "404":
+          description: Not Found - Ingredient ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to retrieve ingredient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Ingredient
+    put:
+      tags:
+      - Ingredient
+      summary: Update an ingredient
+      description: "Update an existing ingredient, accessible only to admin users."
+      operationId: updateIngredient
+      parameters:
+      - name: ingredientId
+        in: path
+        required: true
+        description: ID of the ingredient to update
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                unit:
+                  type: string
+              required:
+                - name
+                - unit
+        required: true
+      responses:
+        "200":
+          description: Ingredient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        "400":
+          description: Bad Request - Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - Ingredient ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to update ingredient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Ingredient
+    delete:
+      tags:
+      - Ingredient
+      summary: Delete an ingredient
+      description: "Delete an existing ingredient, accessible only to admin users."
+      operationId: deleteIngredient
+      parameters:
+      - name: ingredientId
+        in: path
+        required: true
+        description: ID of the ingredient to delete
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Ingredient deleted successfully
+        "404":
+          description: Not Found - Ingredient ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - Unable to delete ingredient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Ingredient
+components:
+  schemas:
+    User:
+      required:
+      - name
+      type: object
+      properties:
+        userId:
+          type: integer
+        name:
+          type: string
+        bmi:
+          type: number
+          format: float
+        dietaryRestrictions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dietary'
+        caloricGoal:
+          type: number
+          format: float
+      example:
+        caloricGoal: 1.4658129
+        dietaryRestrictions:
+        - NO_GLUTEN
+        - NO_GLUTEN
+        name: name
+        userId: 0
+        bmi: 6.0274563
+    Dietary:
+      type: string
+      enum:
+      - NO_GLUTEN
+      - NO_LACTOSE
+      - VEGETARIAN
+      - VEGAN
+      - INTERMITTENT_FASTING
+    MealPlan:
+      type: object
+      properties:
+        mealPlanId:
+          type: integer
+        date:
+          type: string
+          format: date
+        userId:
+          type: integer
+      example:
+        date: 2000-01-23
+        mealPlanId: 0
+        userId: 1
+    Meal:
+      required:
+      - name
+      type: object
+      properties:
+        mealId:
+          type: integer
+        name:
+          type: string
+        instructions:
+          type: string
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+      example:
+        instructions: instructions
+        mealId: 6
+        name: name
+        ingredients:
+        - ingredientId: 1
+          unit: unit
+          name: name
+        - ingredientId: 1
+          unit: unit
+          name: name
+    FoodLog:
+      type: object
+      properties:
+        logId:
+          type: integer
+          description: Auto-generated ID for the food log
+        userId:
+          type: integer
+          description: ID of the user associated with the food log
+        date:
+          type: string
+          format: date
+          description: Date of the food log
+        mealsLogged:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meal'
+          description: List of meals logged
+      required:
+        - date
+        - userId
+      example:
+        userId: 1
+        date: 2000-01-23
+        mealsLogged:
+          - instructions: instructions
+            mealId: 6
+            name: name
+            ingredients:
+              - ingredientId: 1
+                unit: unit
+                name: name
+              - ingredientId: 2
+                unit: unit
+                name: name
+          - instructions: instructions
+            mealId: 7
+            name: name
+            ingredients:
+              - ingredientId: 3
+                unit: unit
+                name: name
+              - ingredientId: 4
+                unit: unit
+                name: name
+    ShoppingList:
+      type: object
+      properties:
+        listId:
+          type: integer
+        type:
+          type: string
+        mealPlanId:
+          type: integer
+      example:
+        listId: 4
+        type: type
+        mealPlanId: 2
+    IngredientCreate:
+      required:
+      - name
+      - unit
+      type: object
+      properties:
+        name:
+          type: string
+        unit:
+          type: string
+      example:
+        name: "Tomato"
+        unit: "kg"
+        
+    Ingredient:
+      required:
+      - name
+      - unit
+      type: object
+      properties:
+        ingredientId:
+          type: integer
+        name:
+          type: string
+        unit:
+          type: string
+      example:
+        ingredientId: 1
+        name: "Tomato"
+        unit: "kg"
+
+    NutritionalInfo:
+      required:
+      - calories
+      - carbs
+      - fat
+      - id
+      - protein
+      type: object
+      properties:
+        id:
+          type: integer
+        calories:
+          type: number
+          format: float
+        protein:
+          type: number
+          format: float
+        carbs:
+          type: number
+          format: float
+        fat:
+          type: number
+          format: float
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
