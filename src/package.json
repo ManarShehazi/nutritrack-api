@@ -1,0 +1,37 @@
+{
+  "name": "nutritrack-api",
+  "version": "1.0.0",
+  "description": "API for NutriTrack, an application to manage dietary needs with meal planning, nutrition tracking, and shopping list generation.",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "mocha tests --timeout 5000 --exit",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "express": "^4.21.1",
+    "js-yaml": "^3.3.0",
+    "jsdom": "^26.0.0",
+    "mysql2": "^3.11.4",
+    "nodemon": "^3.1.7",
+    "oas3-tools": "^2.2.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "badge-maker": "^4.1.0",
+    "chai": "^4.5.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^9.16.0",
+    "globals": "^15.13.0",
+    "mocha": "^10.8.2",
+    "supertest": "^7.0.0"
+  }
+}
