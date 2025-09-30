@@ -1,0 +1,81 @@
+variables:
+  MYSQL_DATABASE: "nutritrack"
+  MYSQL_ROOT_PASSWORD: "example"
+  MYSQL_USER: "user"
+  MYSQL_PASSWORD: "pass"
+  MYSQL_HOST: "mysql"
+
+stages:
+  - build
+  - setup-db
+  - test
+  - coverage
+
+default:
+  image: node:latest
+  services:
+    - name: mysql:5.7
+      alias: mysql
+  cache:
+    paths:
+      - node_modules/
+
+build-job:
+  stage: build
+  script:
+    - echo "Installing dependencies..."
+    - cd src
+    - npm install
+    - echo "Dependencies installed."
+
+setup-db-job:
+  stage: setup-db
+  script:
+    - echo "Installing database..."
+    - cd src                # Navigate into the src directory
+    - apt-get update && apt-get install -y git curl libmcrypt-dev default-mysql-client
+    - mysql --version
+    - mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < db.sql
+    - echo "SHOW tables;" | mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"
+    - echo "Database host is '${MYSQL_HOST}'" 
+
+test-job:
+  stage: test
+  script:
+    - echo "Installing database..."
+    - cd src                # Navigate into the src directory
+    - apt-get update && apt-get install -y git curl libmcrypt-dev default-mysql-client
+    - mysql --version
+    - mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < db.sql
+    - echo "SHOW tables;" | mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"
+    - echo "Database host is '${MYSQL_HOST}'" 
+
+    - echo "Testing dependencies..."
+    - npm install
+    - npm run test              # Run tests
+  artifacts:
+    paths:
+      - test-results/
+
+
+coverage-job:
+  stage: coverage
+  script:
+    - echo "Running code coverage..."
+    - cd src
+    - apt-get update && apt-get install -y git curl libmcrypt-dev default-mysql-client
+    - mysql --version
+    - mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < db.sql
+    - echo "SHOW tables;" | mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"
+    - npm install
+    - npm install c8
+    - npx c8 --reporter=html --reporter=json mocha tests --exit
+    - ls coverage/
+    - node generate-badges.js
+    - echo "Files in coverage directory:"
+    - ls -R coverage
+  artifacts:
+    paths:
+      - coverage/
+      - src/badges/
+
