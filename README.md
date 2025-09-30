@@ -1,4 +1,4 @@
-# 🥗 NutriTrack API
+# NutriTrack API
 
 NutriTrack is a RESTful API designed to manage user dietary needs — including meals, ingredients, food logging, and shopping list generation.
 
@@ -29,7 +29,7 @@ NutriTrack is a RESTful API designed to manage user dietary needs — including 
 
 ---
 
-## 📌 Introduction
+## Introduction
 
 NutriTrack is a backend API that enables:
 
@@ -42,7 +42,7 @@ Built with **Node.js**, **Express**, and **MySQL**, the API adheres to **OpenAPI
 
 ---
 
-## 🖥️ System Requirements
+## System Requirements
 
 - **Node.js** v16.0+
 - **NPM** v7.0+
@@ -52,11 +52,82 @@ Built with **Node.js**, **Express**, and **MySQL**, the API adheres to **OpenAPI
 
 ---
 
-## ⚙️ Project Setup
+## Project Setup
 
 ### 1. Clone the repository
 
 ```bash
 git clone https://gricad-gitlab.univ-grenoble-alpes.fr/ngs/team_06/project.git
 cd project/src
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Set up the database
+
+Import the SQL schema:
+```bash
+src/db.sql
+```
+Update your DB credentials in src/db/connection.js:
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=nutritrack
+```
+
+### 4. Start the application
+```bash
+npm start
+```
+
+To run in development mode with hot reload:
+```bash
+npm run dev
+```
+
+## Project Structure
+src/
+├── api/              # OpenAPI YAML specs
+├── controllers/      # Route handlers
+├── db/               # MySQL configuration
+├── service/          # Business logic
+├── tests/            # Unit & integration tests
+├── utils/            # Helper functions
+├── db.sql            # Database schema and seed data
+├── index.js          # Main server entry point
+└── package.json      # Project dependencies
+
+
+## Database Configuration
+
+NutriTrack uses a normalized MySQL schema with the following core tables:
+
+-** Users**
+userId, name, bmi, dietaryRestrictions, caloricGoal
+
+- **Meals**
+
+mealId, name, instructions
+
+- **Ingredients**
+
+ingredientId, name, unit
+
+- **FoodLogs**
+
+foodLogId, userId, date, mealsLogged
+
+- **Meal_Ingredients**
+
+mealId, ingredientId, quantity
+
+ SQL schema and example seed data are located in:
+ ```bash
+src/db.sql
+```
 
